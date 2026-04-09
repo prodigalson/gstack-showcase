@@ -32,7 +32,7 @@
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         /* Category badge colors */
         .cat-skill-pack { background: rgba(59,130,246,0.12); color: rgba(96,165,250,0.9); border-color: rgba(59,130,246,0.25); }
-        .cat-extension { background: rgba(168,85,247,0.12); color: rgba(192,132,252,0.9); border-color: rgba(168,85,247,0.25); }
+        .cat-extension { background: rgba(6,182,212,0.12); color: rgba(103,232,249,0.9); border-color: rgba(6,182,212,0.25); }
         .cat-tool { background: rgba(34,197,94,0.12); color: rgba(74,222,128,0.9); border-color: rgba(34,197,94,0.25); }
         .cat-guide { background: rgba(234,179,8,0.12); color: rgba(250,204,21,0.9); border-color: rgba(234,179,8,0.25); }
         .cat-template { background: rgba(244,63,94,0.12); color: rgba(251,113,133,0.9); border-color: rgba(244,63,94,0.25); }
@@ -78,7 +78,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 <input id="searchInput" type="text" placeholder="Search projects..."
-                       class="search-input w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-base md:text-sm text-white placeholder:text-white/30 outline-none transition-all">
+                       class="search-input w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-base md:text-sm text-white placeholder:text-white/30 outline-none transition-all" style="color: #ffffff; -webkit-text-fill-color: #ffffff;">
             </div>
             <div class="flex gap-2 flex-nowrap overflow-x-auto shrink-0 -mx-1 px-1" id="sortButtons" role="group" aria-label="Sort order">
                 <button onclick="setSort('stars')" class="tag active text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/60 whitespace-nowrap" data-sort="stars" aria-pressed="true">Most stars</button>
@@ -122,36 +122,102 @@
         'use strict';
 
         const projects = [
-            { name: "gstack-game", fullName: "fagemx/gstack-game", desc: "Complete game production workflow for Claude Code. 27 skills from concept to shipped build. Design review, prototype planning, game feel diagnosis, playability assessment, QA with fix loop, and release.", stars: 23, lang: "Go Template", updated: "2026-04-05", cat: "skill-pack" },
-            { name: "claude-jarvis", fullName: "UpayanGhosh/claude-jarvis", desc: "Universal intent router for Claude Code. Picks the best skill from GSD, Superpowers, and gstack automatically.", stars: 4, lang: "JavaScript", updated: "2026-04-09", cat: "extension" },
-            { name: "claude-code-skills", fullName: "terisuke/claude-code-skills", desc: "Production-ready Claude Code configuration: 27 skills, 37 hooks, 5 rules. Includes Anthropic best practices and gstack integration.", stars: 3, lang: "Shell", updated: "2026-04-03", cat: "skill-pack" },
+            { name: "gstack-auto", fullName: "loperanger7/gstack-auto", desc: "Semi-Autonomous gstack Orchestration: Build with a strong product spec and let Garry Tan's gstack figure out the rest.", stars: 167, lang: "Python", updated: "2026-04-09", cat: "tool" },
+            { name: "nanostack", fullName: "garagon/nanostack", desc: "Minimal AI coding agent team skills for the full engineering workflow.", stars: 167, lang: "Shell", updated: "2026-04-09", cat: "skill-pack" },
+            { name: "ostack", fullName: "mr-daedalium/ostack", desc: "ostack — AI-powered engineering team for Claude Code. Fork of gstack by Garry Tan.", stars: 73, lang: "TypeScript", updated: "2026-04-09", cat: "extension" },
+            { name: "CaludeSkills-Web-Gstack", fullName: "HruthikKommuru/CaludeSkills-Web-Gstack", desc: "gstack project by HruthikKommuru", stars: 48, lang: "", updated: "2026-04-07", cat: "tool" },
+            { name: "gstack-ko", fullName: "lucas-flatwhite/gstack-ko", desc: "Use Garry Tan's exact Claude Code setup: 6 opinionated tools that serve as CEO, Eng Manager, Release Manager and QA Engineer (Korean)", stars: 41, lang: "", updated: "2026-04-08", cat: "guide" },
+            { name: "gstack-openclaw-skills", fullName: "AICreator-Wind/gstack-openclaw-skills", desc: "gstack 的 OpenClaw 适配版本，包含 15 个专业的 AI 助手技能，提供由 AI 驱动的产品级开发自动化工作流。", stars: 36, lang: "Python", updated: "2026-04-09", cat: "tool" },
+            { name: "claude-flow", fullName: "hgahlot/claude-flow", desc: "One-command bootstrap for a maximally efficient Claude Code dev environment. Installs GSD + gstack + Superpowers + Claude-Mem + UI/UX Pro Max + /flow unified command router.", stars: 28, lang: "JavaScript", updated: "2026-04-09", cat: "extension" },
+            { name: "gstack-game", fullName: "fagemx/gstack-game", desc: "Complete game production workflow for Claude Code — 27 skills from concept to shipped build. Design review, prototype planning, game feel diagnosis, playability assessment, QA with fix loop, and release. Built on gstack methodology.", stars: 23, lang: "Go Template", updated: "2026-04-05", cat: "skill-pack" },
+            { name: "gstack-opencode", fullName: "VanGoghBuilder/gstack-opencode", desc: "fork and rebuild gstack for opencode", stars: 18, lang: "TypeScript", updated: "2026-04-06", cat: "extension" },
+            { name: "cfo-stack", fullName: "MikeChongCan/cfo-stack", desc: "Your open source AI CFO and Tax Accountant for individuals and businesses, inspired by Garry Tan's `gstack`", stars: 15, lang: "TypeScript", updated: "2026-04-06", cat: "tool" },
+            { name: "harness-lab", fullName: "Joe-rq/harness-lab", desc: "Harness Engineering 实践框架 - 启发于 OpenAI、gstack、腾讯技术工程实践", stars: 13, lang: "JavaScript", updated: "2026-04-07", cat: "tool" },
+            { name: "gstack", fullName: "Ahacad/gstack", desc: "Claude Code plugin wrapper for garrytan/gstack", stars: 12, lang: "Shell", updated: "2026-04-09", cat: "extension" },
+            { name: "gstack-industrial", fullName: "kevintseng/gstack-industrial", desc: "Workflow system for Claude Code with automated templates, intelligent routing, and staged execution.", stars: 8, lang: "TypeScript", updated: "2026-04-04", cat: "template" },
+            { name: "gstack", fullName: "Bendzae/gstack", desc: "A CLI util to simplify creating stacked branches and pull requests on github.", stars: 7, lang: "Rust", updated: "2026-03-22", cat: "tool" },
+            { name: "product-deploy-agents", fullName: "fasonista71/product-deploy-agents", desc: "A 7-agent pre-release audit pipeline for software products. Generic, reusable, AI-native. Inspired by Garry Tan's gstack.", stars: 7, lang: "", updated: "2026-04-04", cat: "skill-pack" },
+            { name: "gstack", fullName: "MFS-code/gstack", desc: "Fork of garrytan/gstack with first-class Cursor Agent support", stars: 6, lang: "TypeScript", updated: "2026-04-03", cat: "extension" },
+            { name: "gstack-opencode", fullName: "yandong2023/gstack-opencode", desc: "GStack for OpenCode - Multi-role AI coding workflow system", stars: 6, lang: "Shell", updated: "2026-03-27", cat: "skill-pack" },
+            { name: "gstack-on-opencode", fullName: "mayurjobanputra/gstack-on-opencode", desc: "Instructions to use Garry Tan's gstack with Opencode instead of Claude Code", stars: 6, lang: "", updated: "2026-04-06", cat: "tool" },
+            { name: "cursor-stack", fullName: "Himanshu-Sangshetti/cursor-stack", desc: "Cursor stack inspired by gstack", stars: 4, lang: "PowerShell", updated: "2026-03-29", cat: "extension" },
+            { name: "claude-jarvis", fullName: "UpayanGhosh/claude-jarvis", desc: "The only Claude Code skill you need. Universal intent router — picks the best skill from GSD, Superpowers, and gstack automatically.", stars: 4, lang: "JavaScript", updated: "2026-04-09", cat: "extension" },
+            { name: "gstack-codex", fullName: "huanghfzhufeng/gstack-codex", desc: "Codex-native port of Garry Tan's gstack, with a sync pipeline and runtime compatibility fixes for Codex.", stars: 3, lang: "Python", updated: "2026-03-23", cat: "extension" },
+            { name: "gstack-guide", fullName: "terry3838/gstack-guide", desc: "gstack project by terry3838", stars: 3, lang: "Shell", updated: "2026-04-09", cat: "tool" },
+            { name: "claude-code-skills", fullName: "terisuke/claude-code-skills", desc: "Production-ready Claude Code configuration: 27 skills, 37 hooks, 5 rules. Includes Anthropic best practices, gstack integration, and conditional attention tags.", stars: 3, lang: "Shell", updated: "2026-04-03", cat: "skill-pack" },
+            { name: "gstack-no-telemetry", fullName: "VXNCXNX/gstack-no-telemetry", desc: "Remove telemetry from gstack after every install or upgrade", stars: 2, lang: "Shell", updated: "2026-04-05", cat: "tool" },
+            { name: "gstack-cn", fullName: "bbylw/gstack-cn", desc: "开源软件工厂。它将 Claude Code 变成一个你可以实际管理的虚拟工程团队——一个重新思考产品的 CEO，一个锁定架构的工程经理，一个发现 AI 垃圾的设计师，一个发现生产环境 bug 的偏执审查者，一个打开真实浏览器并点击你的应用的 QA 负责人，以及一个发布 PR 的发布工程师。十八位专家，七种强力工具，全部以斜杠命令的形式，全部用 Markdown 编写，全部免费，MIT 许可证，现在就可以使用。", stars: 2, lang: "HTML", updated: "2026-03-28", cat: "tool" },
+            { name: "gstack-openclaw", fullName: "thegalloza/gstack-openclaw", desc: "Converting the gstack created by garrytan and making it usable by OpenClaw.", stars: 2, lang: "", updated: "2026-04-02", cat: "tool" },
+            { name: "OG", fullName: "j23xx/OG", desc: "Master Router for Garry Tan's (the OG) gstack skills", stars: 2, lang: "", updated: "2026-03-22", cat: "extension" },
+            { name: "gstack-ai-roles", fullName: "lee-jet/gstack-ai-roles", desc: "Extracted Specialist Roles & Prompt Library for gstack (by Garry Tan). Transform Claude Code and GPT-5 into a Virtual AI Software Factory.", stars: 2, lang: "", updated: "2026-04-02", cat: "extension" },
+            { name: "gstack-port-for-codex", fullName: "mphaxise/gstack-port-for-codex", desc: "Codex-native ports of garrytan/gstack, with a stable core of planning/review/ship skills plus runtime-aware browser and QA workflows.", stars: 2, lang: "Python", updated: "2026-03-29", cat: "extension" },
+            { name: "factory-public", fullName: "0xsmcai/factory-public", desc: "0xSMC — Autonomous Startup Factory built on GStack. Architecture + results. Implementation is private.", stars: 2, lang: "", updated: "2026-04-09", cat: "skill-pack" },
             { name: "super-aidlc", fullName: "warren830/super-aidlc", desc: "Structured AI development skill combining AIDLC-workflows + Superpowers + gstack. Supports Kiro and Claude Code.", stars: 2, lang: "TypeScript", updated: "2026-04-09", cat: "extension" },
-            { name: "forge", fullName: "KKenny0/forge", desc: "Agentic skills framework. Combines Superpowers and gstack: brainstorming, design review, TDD, automated QA with real browser testing, cross-model code review, one-command shipping.", stars: 2, lang: "", updated: "2026-04-05", cat: "skill-pack" },
-            { name: "claude-setup-guide", fullName: "michaeltruch/claude-setup-guide", desc: "Complete Claude Code setup guide: Skills, Plugins, MCP servers, gstack, Superpowers, and claude-mem.", stars: 1, lang: "", updated: "2026-04-08", cat: "guide" },
-            { name: "skill-kit", fullName: "RealAumi/skill-kit", desc: "Forkable template for building Claude Code skill frameworks. Design patterns extracted from gstack.", stars: 1, lang: "Shell", updated: "2026-03-26", cat: "template" },
-            { name: "claude-stack-plugin", fullName: "bdarbaz/claude-stack-plugin", desc: "Unified Claude Code plugin: 27 skills, 12 agents, 6 hooks, 8 rules. Merges GSD + Superpowers + gstack + Compound into one namespace.", stars: 1, lang: "Shell", updated: "2026-03-29", cat: "skill-pack" },
-            { name: "gstack-chat", fullName: "Ray0907/gstack-chat", desc: "Bot for gstack discussion skills, powered by Claude OAuth.", stars: 0, lang: "TypeScript", updated: "2026-03-21", cat: "tool" },
-            { name: "gstack-antigravity", fullName: "krnbwj/gstack-antigravity", desc: "astack: Opinionated workflow skills for Antigravity, formerly GStack for Claude Code.", stars: 0, lang: "TypeScript", updated: "2026-03-17", cat: "extension" },
-            { name: "gspowers", fullName: "fshaan/gspowers", desc: "AI dev workflow orchestrator. Claude Code skill coordinating gstack + superpowers.", stars: 0, lang: "Shell", updated: "2026-04-02", cat: "extension" },
-            { name: "gstack-guide", fullName: "dotanminh/gstack-guide", desc: "Vietnamese documentation for Garry Tan's workflow skills for Claude Code.", stars: 0, lang: "HTML", updated: "2026-03-15", cat: "guide" },
-            { name: "flutter-project-template", fullName: "hungHoni/flutter-project-template", desc: "Flutter project template with Claude Code config, minimalist UI design system, and gstack skills.", stars: 0, lang: "TypeScript", updated: "2026-03-25", cat: "template" },
-            { name: "itd5-agentic-stack", fullName: "5hay196/itd5-agentic-stack", desc: "ITD5 Agentic Stack. Paperclip company OS + gstack Claude Code skills for zero-human business orchestration.", stars: 0, lang: "Shell", updated: "2026-03-31", cat: "tool" },
-            { name: "skill-fusion", fullName: "Bryanh9111/skill-fusion", desc: "Hard routing rules for running gstack + superpowers together. Decision layer wraps execution layer, no overlapping skills.", stars: 0, lang: "", updated: "2026-04-02", cat: "extension" },
-            { name: "gstack-lite", fullName: "effinrich/gstack-lite", desc: "Five Claude Code workflow skills as plain Markdown. No binary deps. Adapted from garrytan/gstack.", stars: 0, lang: "", updated: "2026-03-21", cat: "extension" },
-            { name: "franc-system-template", fullName: "francky180/franc-system-template", desc: "AI Software Factory: 102+ Claude Code skills, BRAIN Obsidian vault, one-click install. Superpowers + gstack + Marketing Suite.", stars: 0, lang: "Shell", updated: "2026-04-08", cat: "skill-pack" },
-            { name: "my-ai-stack", fullName: "Hyuk/my-ai-stack", desc: "AI-powered development stack: Claude Code, oh-my-claudecode, MCP servers, 32 specialized agents, 30+ gstack skills.", stars: 0, lang: "", updated: "2026-04-03", cat: "guide" },
-            { name: "gstack-wsl-setup", fullName: "meoroo76/gstack-wsl-setup", desc: "gstack WSL installation and macOS compatibility patch for Windows Subsystem for Linux.", stars: 0, lang: "", updated: "2026-03-30", cat: "tool" },
-            { name: "hyperstack", fullName: "jkcau6698/hyperstack", desc: "Hybrid Claude Code skills: best of gstack + oh-my-claudecode. 8 sprint-structured skills for planning, review, debugging, shipping.", stars: 0, lang: "JavaScript", updated: "2026-03-29", cat: "skill-pack" },
-            { name: "factory", fullName: "killvxk/factory", desc: "10 engineering skills + 4 review agents + 1 pipeline. Self-contained Claude Code plugin distilled from compound-engineering, agent-skills, and gstack.", stars: 0, lang: "", updated: "2026-04-08", cat: "skill-pack" },
-            { name: "gstack-showcase", fullName: "micovi/gstack-showcase", desc: "Visual guide to gstack: diagrams, use cases, and cheat sheets for the Claude Code skill suite.", stars: 0, lang: "", updated: "2026-03-25", cat: "guide" },
-            { name: "gstack-sandbox", fullName: "B42Labs/gstack-sandbox", desc: "Containerized development environment for running Claude Code with gstack skills on any repository. Pre-configured with Go and Kubernetes toolchain.", stars: 0, lang: "Dockerfile", updated: "2026-03-25", cat: "tool" },
-            { name: "ag-kit", fullName: "trinhhaox/ag-kit", desc: "Turn Claude Code and Gemini CLI into a complete engineering team. 21 agents, 54 skills, 16 workflows. Integrates superpowers + gstack.", stars: 0, lang: "Python", updated: "2026-03-28", cat: "skill-pack" },
-            { name: "claude-retro", fullName: "Ktulue/claude-retro", desc: "Standalone Claude Code skill for structured post-session retrospectives, extracted from gstack's /retro skill.", stars: 0, lang: "", updated: "2026-03-25", cat: "extension" },
-            { name: "startup-os", fullName: "acesley180604/startup-os", desc: "49-skill startup operating system for Claude Code. 28 startup lifecycle workflows + 21 gstack dev tools. Covers Discovery through Ops.", stars: 0, lang: "TypeScript", updated: "2026-03-21", cat: "skill-pack" },
-            { name: "prism-playbook", fullName: "duyentb95/prism-playbook", desc: "PRISM: Open-source AI Team Playbook for Claude Code. Conventions, templates, and pre-built skills for structured planning and parallel execution.", stars: 0, lang: "Shell", updated: "2026-04-08", cat: "template" },
-            { name: "claude-office-hours", fullName: "Ktulue/claude-office-hours", desc: "Standalone Claude Code skill for design-first brainstorming, extracted from gstack's /office-hours. Three modes: startup, research, builder.", stars: 0, lang: "", updated: "2026-03-25", cat: "extension" },
-            { name: "smstack-ai", fullName: "priyanshuj-ai/smstack-ai", desc: "AI-powered personal media agency. Claude Code skills for social media: brand discovery, topic research, post generation, fact-checking, content calendar.", stars: 0, lang: "Shell", updated: "2026-03-20", cat: "tool" },
-            { name: "gstack (fork)", fullName: "rmarino550/gstack", desc: "gstack skills for Claude Code (community fork).", stars: 0, lang: "TypeScript", updated: "2026-03-20", cat: "extension" },
+            { name: "forge", fullName: "KKenny0/forge", desc: "An agentic skills framework. Combines the best of Superpowers and gstack into a unified skill pack: structured brainstorming, design review, TDD-driven implementation, automated QA with real browser testing, cross-model code review, and one-command shipping. Works on both OpenClaw and Claude Code.", stars: 2, lang: "", updated: "2026-04-05", cat: "skill-pack" },
+            { name: "gstack-cheat-sheet", fullName: "fmalamitsas/gstack-cheat-sheet", desc: "gstack Cheat Sheet (Garry Tan gstack)", stars: 1, lang: "HTML", updated: "2026-03-30", cat: "guide" },
+            { name: "gstack-to-gsd", fullName: "ivawzh/gstack-to-gsd", desc: "Bridge gstack review artifacts into GSD planning format. Use gstack for strategy, GSD for execution.", stars: 1, lang: "Shell", updated: "2026-04-02", cat: "extension" },
+            { name: "gstack-skills", fullName: "zzzhizhia/gstack-skills", desc: "Upgrade locally installed gstack skills in place", stars: 1, lang: "TypeScript", updated: "2026-04-06", cat: "skill-pack" },
+            { name: "gstack-codebuddy", fullName: "1ncludeSteven/gstack-codebuddy", desc: "One-command GStack installation for CodeBuddy IDE", stars: 1, lang: "Shell", updated: "2026-04-02", cat: "tool" },
+            { name: "fullstack", fullName: "fixby/fullstack", desc: "fullstsck：openclaw版本的gstack", stars: 1, lang: "TypeScript", updated: "2026-04-01", cat: "tool" },
+            { name: "claude-setup-guide", fullName: "michaeltruch/claude-setup-guide", desc: "Mein komplettes Claude Code Setup: Skills, Plugins, MCP-Server, gstack, Superpowers & claude-mem", stars: 1, lang: "", updated: "2026-04-08", cat: "skill-pack" },
+            { name: "skill-kit", fullName: "RealAumi/skill-kit", desc: "A forkable template for building Claude Code skill frameworks. Design patterns extracted from gstack.", stars: 1, lang: "Shell", updated: "2026-03-26", cat: "template" },
+            { name: "claude-stack-plugin", fullName: "bdarbaz/claude-stack-plugin", desc: "Unified Claude Code plugin: 27 skills, 12 agents, 6 hooks, 8 rules. Merges GSD + Superpowers + gstack + Compound + Uncodixfy + ECC into one /s: namespace.", stars: 1, lang: "Shell", updated: "2026-03-29", cat: "skill-pack" },
+            { name: "gstack", fullName: "snu9026-Chris/gstack", desc: "gstack", stars: 0, lang: "TypeScript", updated: "2026-04-05", cat: "tool" },
+            { name: "Claude", fullName: "fuelaccelerator/Claude", desc: "Gstack", stars: 0, lang: "Python", updated: "2026-03-27", cat: "tool" },
+            { name: "gstack-testing", fullName: "jobhuntersaipro-design/gstack-testing", desc: "gstack-testing", stars: 0, lang: "", updated: "2026-03-24", cat: "tool" },
+            { name: "strawpot_gstack", fullName: "strawpot/strawpot_gstack", desc: "StarwPot GStack", stars: 0, lang: "", updated: "2026-03-29", cat: "tool" },
+            { name: "gstack_test", fullName: "taku0515/gstack_test", desc: "gstackのテスト", stars: 0, lang: "", updated: "2026-03-24", cat: "tool" },
+            { name: "gstack_course", fullName: "qintnt/gstack_course", desc: "gstack interactive course", stars: 0, lang: "HTML", updated: "2026-04-08", cat: "tool" },
+            { name: "pomodoro-by-gstack", fullName: "corazzon/pomodoro-by-gstack", desc: "pomodoro-by-gstack", stars: 0, lang: "HTML", updated: "2026-03-20", cat: "tool" },
+            { name: "gstack-qoder-version", fullName: "295322187/gstack-qoder-version", desc: "gstack-qoder-version", stars: 0, lang: "", updated: "2026-03-23", cat: "tool" },
+            { name: "gemstack", fullName: "ekrishgupta/gemstack", desc: "gstack for Gemini CLI", stars: 0, lang: "TypeScript", updated: "2026-03-19", cat: "tool" },
+            { name: "superpowers-crew", fullName: "agent-skill-hub/superpowers-crew", desc: "Superpowers agency gstack skill", stars: 0, lang: "Shell", updated: "2026-04-03", cat: "tool" },
+            { name: "gstack-playground", fullName: "musaseals/gstack-playground", desc: "gstack (https://github.com/garrytan/gstack) の試用・評価用リポジトリ", stars: 0, lang: "", updated: "2026-03-28", cat: "tool" },
+            { name: "gstack-cuda", fullName: "constlearner89/gstack-cuda", desc: "gstack expansion with CUDA", stars: 0, lang: "TypeScript", updated: "2026-03-24", cat: "tool" },
+            { name: "gstack-lift-coach-watchos", fullName: "aniketdivecha/gstack-lift-coach-watchos", desc: "gstack-lift-coach-watchos", stars: 0, lang: "", updated: "2026-04-08", cat: "tool" },
+            { name: "dstack", fullName: "ube-matcha/dstack", desc: "My version of gstack", stars: 0, lang: "Shell", updated: "2026-03-13", cat: "tool" },
+            { name: "praxis", fullName: "aiwonglab/praxis", desc: "An exploration from gstack", stars: 0, lang: "Shell", updated: "2026-04-01", cat: "tool" },
+            { name: "gstack", fullName: "rmarino550/gstack", desc: "gstack skills for Claude Code", stars: 0, lang: "TypeScript", updated: "2026-03-20", cat: "skill-pack" },
+            { name: "gstack", fullName: "ntrees/gstack", desc: "garrytan/gstack 中文版", stars: 0, lang: "", updated: "2026-03-31", cat: "guide" },
+            { name: "gstack", fullName: "ehddk6-cyber/gstack", desc: "gstack - virtual engineering team skills", stars: 0, lang: "TypeScript", updated: "2026-04-09", cat: "skill-pack" },
+            { name: "aistack", fullName: "huhoo/aistack", desc: "openclaw acpx + claude code + gstack", stars: 0, lang: "TypeScript", updated: "2026-03-20", cat: "tool" },
+            { name: "gstack-codex", fullName: "iAladdin/gstack-codex", desc: "`gstack-codex` is a Codex-native software factory inspired by the workflow design of `gstack`", stars: 0, lang: "TypeScript", updated: "2026-03-20", cat: "skill-pack" },
+            { name: "StartupFramework", fullName: "steffenpharai/StartupFramework", desc: "Startup framework with gstack (Cursor)", stars: 0, lang: "TypeScript", updated: "2026-03-21", cat: "extension" },
+            { name: "gstack-dashboard", fullName: "i4RP/gstack-dashboard", desc: "gstack ダッシュボード UI - React + TypeScript + TailwindCSS", stars: 0, lang: "TypeScript", updated: "2026-03-19", cat: "tool" },
+            { name: "GstackReview", fullName: "esotopic/GstackReview", desc: "Reviewing Gary Tans GSTACK - A 1000Problems Project", stars: 0, lang: "HTML", updated: "2026-04-03", cat: "tool" },
+            { name: "GstackLearning", fullName: "ty2145621/GstackLearning", desc: "GstackLearning", stars: 0, lang: "C", updated: "2019-06-23", cat: "guide" },
+            { name: "gstack-review-mcp", fullName: "rznies/gstack-review-mcp", desc: "MCP server for gstack review skills", stars: 0, lang: "TypeScript", updated: "2026-03-28", cat: "skill-pack" },
+            { name: "gstack-self-evolve", fullName: "ez2sarang/gstack-self-evolve", desc: "attach self evolve model at gstack SKILL", stars: 0, lang: "TypeScript", updated: "2026-03-30", cat: "tool" },
+            { name: "Gstack4review", fullName: "HiroHsiang/Gstack4review", desc: "基于Gstack构建的文献综述skill for agents.", stars: 0, lang: "JavaScript", updated: "2026-03-22", cat: "tool" },
+            { name: "ProjectS", fullName: "kotiti/ProjectS", desc: "ProjectS - AI-powered development with gstack", stars: 0, lang: "TypeScript", updated: "2026-03-24", cat: "tool" },
+            { name: "pecunio2", fullName: "ratiertm/pecunio2", desc: "pecunio gstack 버전 phase 1은 3시간쯤 걸림", stars: 0, lang: "TypeScript", updated: "2026-03-24", cat: "tool" },
+            { name: "gstack-main", fullName: "JonOlsenCa/gstack-main", desc: "gstack - CLI tools for Claude Code", stars: 0, lang: "TypeScript", updated: "2026-04-01", cat: "tool" },
+            { name: "gstack-zh", fullName: "shengbinxu/gstack-zh", desc: "gstack 中文深度注解学习指南 — Chinese annotated guide to garrytan/gstack", stars: 0, lang: "", updated: "2026-04-07", cat: "guide" },
+            { name: "gstack-private", fullName: "jarvisxiong2022-hue/gstack-private", desc: "GStack Analysis - AI Development Workflow Tools", stars: 0, lang: "TypeScript", updated: "2026-03-26", cat: "tool" },
+            { name: "gstuck", fullName: "greencm/gstuck", desc: "gstack + version pins + 7d delay - telemetry", stars: 0, lang: "TypeScript", updated: "2026-04-03", cat: "tool" },
+            { name: "gstack-lite", fullName: "austinmw/gstack-lite", desc: "Markdown-only, low-ceremony version of gstack", stars: 0, lang: "", updated: "2026-04-01", cat: "tool" },
+            { name: "codex-gstack", fullName: "sdntsng/codex-gstack", desc: "Codex-native workflow skills inspired by gstack", stars: 0, lang: "Python", updated: "2026-03-19", cat: "skill-pack" },
+            { name: "gstack-chat", fullName: "Ray0907/gstack-chat", desc: "Bot for gstack discussion skills, powered by Claude OAuth", stars: 0, lang: "TypeScript", updated: "2026-03-21", cat: "skill-pack" },
+            { name: "gstack-antigravity", fullName: "krnbwj/gstack-antigravity", desc: "astack - Opinionated workflow skills for Antigravity (formerly GStack for Claude Code)", stars: 0, lang: "TypeScript", updated: "2026-03-17", cat: "skill-pack" },
+            { name: "gspowers", fullName: "fshaan/gspowers", desc: "AI dev workflow orchestrator — Claude Code skill coordinating gstack + superpowers", stars: 0, lang: "Shell", updated: "2026-04-02", cat: "tool" },
+            { name: "gstack-guide", fullName: "dotanminh/gstack-guide", desc: "gstack Guide - Vietnamese documentation for Garry Tan's 8 workflow skills for Claude Code", stars: 0, lang: "HTML", updated: "2026-03-15", cat: "guide" },
+            { name: "flutter-project-template", fullName: "hungHoni/flutter-project-template", desc: "Flutter project template with Claude Code config, minimalist UI design system, and gstack skills", stars: 0, lang: "TypeScript", updated: "2026-03-25", cat: "template" },
+            { name: "itd5-agentic-stack", fullName: "5hay196/itd5-agentic-stack", desc: "ITD5 Agentic Stack — Paperclip company OS + gstack Claude Code skills for zero-human business orchestration", stars: 0, lang: "Shell", updated: "2026-03-31", cat: "skill-pack" },
+            { name: "skill-fusion", fullName: "Bryanh9111/skill-fusion", desc: "Hard routing rules for running gstack + superpowers together in Claude Code —  decision layer (gstack) wraps execution layer (superpowers), no overlapping   skills, no model guessing.", stars: 0, lang: "", updated: "2026-04-02", cat: "skill-pack" },
+            { name: "gstack-lite", fullName: "effinrich/gstack-lite", desc: "Five Claude Code workflow skills as plain Markdown. No binary deps. Adapted from garrytan/gstack.", stars: 0, lang: "", updated: "2026-03-21", cat: "skill-pack" },
+            { name: "franc-system-template", fullName: "francky180/franc-system-template", desc: "AI Software Factory — 102+ Claude Code skills, BRAIN Obsidian vault, one-click install. Superpowers + gstack + Marketing Suite.", stars: 0, lang: "Shell", updated: "2026-04-08", cat: "skill-pack" },
+            { name: "gstack-wsl-setup", fullName: "meoroo76/gstack-wsl-setup", desc: "Claude Code skill: gstack WSL installation and macOS compatibility patch for Windows Subsystem for Linux", stars: 0, lang: "", updated: "2026-03-30", cat: "tool" },
+            { name: "hyperstack", fullName: "jkcau6698/hyperstack", desc: "Hybrid Claude Code skills: best of gstack + oh-my-claudecode. 8 sprint-structured skills for planning, review, debugging, shipping, and autonomous execution.", stars: 0, lang: "JavaScript", updated: "2026-03-29", cat: "skill-pack" },
+            { name: "my-ai-stack", fullName: "Hyuk/my-ai-stack", desc: "My AI-powered development stack — Claude Code, oh-my-claudecode, MCP servers, 32 specialized agents, 30+ gstack skills", stars: 0, lang: "", updated: "2026-04-03", cat: "skill-pack" },
+            { name: "factory", fullName: "killvxk/factory", desc: "10 engineering skills + 4 review agents + 1 pipeline. Self-contained Claude Code plugin distilled from compound-engineering, agent-skills, Waza, superpowers, and gstack.", stars: 0, lang: "", updated: "2026-04-09", cat: "skill-pack" },
+            { name: "gstack-showcase", fullName: "micovi/gstack-showcase", desc: "Visual guide to gstack — diagrams, use cases, and cheat sheets for the Claude Code skill suite", stars: 0, lang: "", updated: "2026-03-25", cat: "guide" },
+            { name: "gstack-sandbox", fullName: "B42Labs/gstack-sandbox", desc: "Containerized development environment for running Claude Code with gstack skills on any repository. Pre-configured with a full Go and Kubernetes operator development toolchain.", stars: 0, lang: "Dockerfile", updated: "2026-03-25", cat: "skill-pack" },
+            { name: "ag-kit", fullName: "trinhhaox/ag-kit", desc: "AG Kit — Biến Claude Code & Gemini CLI thành đội kỹ sư hoàn chỉnh. 21 agents, 54 skills (domain + methodology), 16 workflows. Tích hợp superpowers + gstack.", stars: 0, lang: "Python", updated: "2026-03-28", cat: "skill-pack" },
+            { name: "claude-retro", fullName: "Ktulue/claude-retro", desc: "Standalone Claude Code skill for structured post-session retrospectives, extracted from garrytan/gstack's /retro skill. Analyzes what happened in a build session — what went well, what didn't, what patterns repeated — and outputs a markdown retrospective. Strips gstack infrastructure, keeps the core reflection methodology.", stars: 0, lang: "", updated: "2026-03-25", cat: "extension" },
+            { name: "startup-os", fullName: "acesley180604/startup-os", desc: "49-skill startup operating system for Claude Code. 28 startup lifecycle workflows + 21 gstack dev tools. Covers Discovery, Strategy, Launch, Growth, Sales, Raise, Team, and Ops.", stars: 0, lang: "TypeScript", updated: "2026-03-21", cat: "skill-pack" },
+            { name: "prism-playbook", fullName: "duyentb95/prism-playbook", desc: "PRISM is an open-source AI Team Playbook for Claude Code. It provides conventions, templates, and pre-built skills that make Claude Code work like a professional AI team — structured planning, parallel execution, knowledge persistence, and cognitive mode switching (via gstack integration).", stars: 0, lang: "Shell", updated: "2026-04-08", cat: "template" },
+            { name: "claude-office-hours", fullName: "Ktulue/claude-office-hours", desc: "Standalone Claude Code skill for design-first brainstorming, extracted from garrytan/gstack's /office-hours skill. Three modes: startup (six forcing questions), research (thesis validation + kill criteria), and builder (generative design partner). Outputs markdown design docs with premise-challenge methodology.", stars: 0, lang: "", updated: "2026-03-25", cat: "extension" },
+            { name: "smstack-ai", fullName: "priyanshuj-ai/smstack-ai", desc: "Your AI-powered personal media agency. A Claude Code skill system for building your social media brand — brand discovery, topic research, post generation, fact-checking, content calendar, and cross-platform adaptation. Inspired by gstack.", stars: 0, lang: "Shell", updated: "2026-03-20", cat: "tool" }
         ];
 
         // ---- Utilities ----
@@ -218,13 +284,14 @@
                 filtered = filtered.filter(p => p.cat === currentCategory);
             }
             if (searchQuery) {
-                const q = searchQuery.toLowerCase();
-                filtered = filtered.filter(p =>
-                    p.name.toLowerCase().includes(q) ||
-                    p.desc.toLowerCase().includes(q) ||
-                    p.fullName.toLowerCase().includes(q) ||
-                    (p.lang && p.lang.toLowerCase().includes(q))
-                );
+                const words = searchQuery.toLowerCase().split(/[\s\-_]+/).filter(w => w.length > 0);
+                filtered = filtered.filter(p => {
+                    // Combine all searchable text into one string, replacing hyphens/underscores with spaces
+                    const haystack = [p.name, p.desc, p.fullName, p.lang || '', p.cat]
+                        .join(' ').toLowerCase().replace(/[-_]/g, ' ');
+                    // Every word must appear somewhere
+                    return words.every(w => haystack.includes(w));
+                });
             }
             if (currentSort === 'stars') filtered.sort((a, b) => b.stars - a.stars);
             else if (currentSort === 'recent') filtered.sort((a, b) => b.updated.localeCompare(a.updated));
