@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0f">
     <title>Built with gstack</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
@@ -16,14 +17,14 @@
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { background: #0a0a0f; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { background: #0a0a0f; overflow-x: hidden; }
         .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
         .tag { transition: all 0.15s ease; }
         .tag:hover { background: rgba(255,255,255,0.15); }
-        .tag.active { background: rgba(168,85,247,0.2); border-color: rgba(168,85,247,0.4); color: rgba(168,85,247,0.9); }
-        .search-input:focus { box-shadow: 0 0 0 2px rgba(168,85,247,0.3); }
+        .tag.active { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.4); color: rgba(96,165,250,0.9); }
+        .search-input:focus { box-shadow: 0 0 0 2px rgba(59,130,246,0.3); }
         .fade-in { animation: fadeIn 0.4s ease forwards; opacity: 0; }
         @keyframes fadeIn { to { opacity: 1; } }
     </style>
@@ -32,10 +33,10 @@
 
     <!-- Header -->
     <header class="border-b border-white/5 sticky top-0 bg-base/80 backdrop-blur-xl z-50">
-        <div class="max-w-6xl mx-auto px-4 md:px-8 py-5 flex items-center justify-between">
-            <div>
-                <h1 class="text-lg font-semibold tracking-tight">Built with <span class="text-purple-400">gstack</span></h1>
-                <p class="text-white/30 text-xs mt-0.5">Projects powered by Garry Tan's Claude Code skills</p>
+        <div class="max-w-6xl mx-auto px-4 md:px-8 py-4 md:py-5 flex items-center justify-between gap-3" style="padding-top: max(1rem, env(safe-area-inset-top));">
+            <div class="min-w-0">
+                <h1 class="text-base md:text-lg font-semibold tracking-tight">Built with <span class="text-blue-400">gstack</span></h1>
+                <p class="text-white/30 text-[11px] md:text-xs mt-0.5 hidden sm:block">Projects powered by Garry Tan's Claude Code skills</p>
             </div>
             <a href="https://github.com/garrytan/gstack" target="_blank" rel="noopener"
                class="text-white/40 hover:text-white/80 text-xs border border-white/10 px-3 py-1.5 rounded-lg transition-colors">
@@ -49,7 +50,7 @@
         <!-- Featured project of the day -->
         <section id="featured" class="mb-12">
             <p class="text-white/30 text-xs font-mono tracking-wider uppercase mb-4">Project of the day</p>
-            <div id="featuredCard" class="bg-gradient-to-br from-purple-500/10 via-card to-card border border-purple-500/20 rounded-xl p-6 md:p-8">
+            <div id="featuredCard" class="bg-gradient-to-br from-blue-500/10 via-card to-card border border-blue-500/20 rounded-xl p-6 md:p-8">
                 <!-- Filled by JS -->
             </div>
         </section>
@@ -61,12 +62,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 <input id="searchInput" type="text" placeholder="Search projects..."
-                       class="search-input w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-white/25 outline-none transition-all">
+                       class="search-input w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-base md:text-sm text-white placeholder:text-white/25 outline-none transition-all">
             </div>
-            <div class="flex gap-2 flex-wrap" id="sortButtons">
-                <button onclick="setSort('stars')" class="tag active text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="stars" aria-pressed="true">Most stars</button>
-                <button onclick="setSort('recent')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="recent" aria-pressed="false">Recently updated</button>
-                <button onclick="setSort('name')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="name" aria-pressed="false">A-Z</button>
+            <div class="flex gap-2 flex-nowrap overflow-x-auto shrink-0 -mx-1 px-1" id="sortButtons">
+                <button onclick="setSort('stars')" class="tag active text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50 whitespace-nowrap" data-sort="stars" aria-pressed="true">Most stars</button>
+                <button onclick="setSort('recent')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50 whitespace-nowrap" data-sort="recent" aria-pressed="false">Recently updated</button>
+                <button onclick="setSort('name')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50 whitespace-nowrap" data-sort="name" aria-pressed="false">A-Z</button>
             </div>
         </div>
 
@@ -90,7 +91,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 mt-16 py-8 text-center">
+    <footer class="border-t border-white/5 mt-16 py-8 text-center" style="padding-bottom: max(2rem, env(safe-area-inset-bottom));">
         <p class="text-white/20 text-xs">Data snapshot from GitHub, April 2026.</p>
     </footer>
 
@@ -163,7 +164,7 @@
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="flex-1">
                         <a href="https://github.com/${esc(p.fullName)}" target="_blank" rel="noopener"
-                           class="text-xl font-semibold text-white hover:text-purple-300 transition-colors no-underline">
+                           class="text-xl font-semibold text-white hover:text-blue-300 transition-colors no-underline">
                             ${esc(p.fullName)}
                         </a>
                         <p class="text-white/50 text-sm mt-2 leading-relaxed">${esc(p.desc)}</p>
@@ -174,7 +175,7 @@
                         </div>
                     </div>
                     <a href="https://github.com/${p.fullName}" target="_blank" rel="noopener"
-                       class="shrink-0 px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-300 text-xs hover:bg-purple-500/30 transition-colors no-underline">
+                       class="shrink-0 px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-lg text-blue-300 text-xs hover:bg-blue-500/30 transition-colors no-underline">
                         View on GitHub
                     </a>
                 </div>
@@ -231,7 +232,7 @@
                     <p class="text-white/40 text-xs leading-relaxed mb-3 line-clamp-3">${esc(p.desc)}</p>
                     <div class="flex items-center gap-3">
                         ${p.lang ? `<span class="text-white/25 text-[10px] font-mono">${esc(p.lang)}</span>` : ''}
-                        <span class="text-purple-400/40 text-[10px] px-1.5 py-0.5 border border-purple-400/10 rounded">${esc(p.cat)}</span>
+                        <span class="text-blue-400/40 text-[10px] px-1.5 py-0.5 border border-purple-400/10 rounded">${esc(p.cat)}</span>
                         <span class="text-white/15 text-[10px] ml-auto">${p.updated}</span>
                     </div>
                 </a>
