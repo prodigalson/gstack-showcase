@@ -64,20 +64,20 @@
                        class="search-input w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-white/25 outline-none transition-all">
             </div>
             <div class="flex gap-2 flex-wrap" id="sortButtons">
-                <button onclick="setSort('stars')" class="tag active text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="stars">Most stars</button>
-                <button onclick="setSort('recent')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="recent">Recently updated</button>
-                <button onclick="setSort('name')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="name">A-Z</button>
+                <button onclick="setSort('stars')" class="tag active text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="stars" aria-pressed="true">Most stars</button>
+                <button onclick="setSort('recent')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="recent" aria-pressed="false">Recently updated</button>
+                <button onclick="setSort('name')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-sort="name" aria-pressed="false">A-Z</button>
             </div>
         </div>
 
         <!-- Category filters -->
         <div class="flex gap-2 flex-wrap mb-8" id="categoryFilters">
-            <button onclick="setCategory('all')" class="tag active text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="all">All</button>
-            <button onclick="setCategory('skill-pack')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="skill-pack">Skill Packs</button>
-            <button onclick="setCategory('extension')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="extension">Extensions</button>
-            <button onclick="setCategory('tool')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="tool">Tools</button>
-            <button onclick="setCategory('guide')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="guide">Guides</button>
-            <button onclick="setCategory('template')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="template">Templates</button>
+            <button onclick="setCategory('all')" class="tag active text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="all" aria-pressed="true">All</button>
+            <button onclick="setCategory('skill-pack')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="skill-pack" aria-pressed="false">Skill Packs</button>
+            <button onclick="setCategory('extension')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="extension" aria-pressed="false">Extensions</button>
+            <button onclick="setCategory('tool')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="tool" aria-pressed="false">Tools</button>
+            <button onclick="setCategory('guide')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="guide" aria-pressed="false">Guides</button>
+            <button onclick="setCategory('template')" class="tag text-xs px-3 py-1.5 border border-white/10 rounded-lg text-white/50" data-cat="template" aria-pressed="false">Templates</button>
         </div>
 
         <!-- Results count -->
@@ -91,7 +91,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-white/5 mt-16 py-8 text-center">
-        <p class="text-white/20 text-xs">Data sourced from GitHub. Updated on page load.</p>
+        <p class="text-white/20 text-xs">Data snapshot from GitHub, April 2026.</p>
     </footer>
 
     <script>
@@ -132,18 +132,29 @@
             { name: "gstack (fork)", fullName: "rmarino550/gstack", desc: "gstack skills for Claude Code (community fork).", stars: 0, lang: "TypeScript", updated: "2026-03-20", cat: "extension" },
         ];
 
+        // ---- HTML escaping (prevent XSS from repo descriptions) ----
+        function esc(str) {
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
         // ---- State ----
         let currentSort = 'stars';
         let currentCategory = 'all';
         let searchQuery = '';
+        let initialLoad = true;
 
         // ---- Featured project of the day ----
         function getFeaturedProject() {
             // Deterministic "random" based on day of year
             const now = new Date();
             const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-            const interesting = projects.filter(p => p.stars > 0 || p.desc.length > 100);
-            return interesting[dayOfYear % interesting.length];
+            // Weight toward starred projects: include starred ones 3x
+            const starred = projects.filter(p => p.stars > 0);
+            const others = projects.filter(p => p.stars === 0 && p.desc.length > 80);
+            const pool = [...starred, ...starred, ...starred, ...others];
+            return pool[dayOfYear % pool.length];
         }
 
         function renderFeatured() {
@@ -151,15 +162,15 @@
             document.getElementById('featuredCard').innerHTML = `
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="flex-1">
-                        <a href="https://github.com/${p.fullName}" target="_blank" rel="noopener"
+                        <a href="https://github.com/${esc(p.fullName)}" target="_blank" rel="noopener"
                            class="text-xl font-semibold text-white hover:text-purple-300 transition-colors no-underline">
-                            ${p.fullName}
+                            ${esc(p.fullName)}
                         </a>
-                        <p class="text-white/50 text-sm mt-2 leading-relaxed">${p.desc}</p>
+                        <p class="text-white/50 text-sm mt-2 leading-relaxed">${esc(p.desc)}</p>
                         <div class="flex items-center gap-4 mt-4">
                             ${p.stars > 0 ? `<span class="text-yellow-400/70 text-xs flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>${p.stars}</span>` : ''}
-                            ${p.lang ? `<span class="text-white/30 text-xs">${p.lang}</span>` : ''}
-                            <span class="text-white/20 text-xs">${p.cat}</span>
+                            ${p.lang ? `<span class="text-white/30 text-xs">${esc(p.lang)}</span>` : ''}
+                            <span class="text-white/20 text-xs">${esc(p.cat)}</span>
                         </div>
                     </div>
                     <a href="https://github.com/${p.fullName}" target="_blank" rel="noopener"
@@ -172,7 +183,7 @@
 
         // ---- Render grid ----
         function getFilteredProjects() {
-            let filtered = projects;
+            let filtered = [...projects];
 
             if (currentCategory !== 'all') {
                 filtered = filtered.filter(p => p.cat === currentCategory);
@@ -210,17 +221,17 @@
             }
 
             grid.innerHTML = filtered.map((p, i) => `
-                <a href="https://github.com/${p.fullName}" target="_blank" rel="noopener"
-                   class="card-hover fade-in bg-card border border-white/5 rounded-xl p-5 no-underline block"
-                   style="animation-delay: ${i * 30}ms;">
+                <a href="https://github.com/${esc(p.fullName)}" target="_blank" rel="noopener"
+                   class="card-hover ${initialLoad ? 'fade-in' : ''} bg-card border border-white/5 rounded-xl p-5 no-underline block"
+                   style="${initialLoad ? 'animation-delay:' + (i * 30) + 'ms;' : ''}">
                     <div class="flex items-start justify-between mb-2">
-                        <h3 class="text-sm font-medium text-white/90 truncate flex-1">${p.name}</h3>
+                        <h3 class="text-sm font-medium text-white/90 truncate flex-1">${esc(p.name)}</h3>
                         ${p.stars > 0 ? `<span class="text-yellow-400/60 text-xs flex items-center gap-1 shrink-0 ml-2"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>${p.stars}</span>` : ''}
                     </div>
-                    <p class="text-white/40 text-xs leading-relaxed mb-3 line-clamp-3">${p.desc}</p>
+                    <p class="text-white/40 text-xs leading-relaxed mb-3 line-clamp-3">${esc(p.desc)}</p>
                     <div class="flex items-center gap-3">
-                        ${p.lang ? `<span class="text-white/25 text-[10px] font-mono">${p.lang}</span>` : ''}
-                        <span class="text-purple-400/40 text-[10px] px-1.5 py-0.5 border border-purple-400/10 rounded">${p.cat}</span>
+                        ${p.lang ? `<span class="text-white/25 text-[10px] font-mono">${esc(p.lang)}</span>` : ''}
+                        <span class="text-purple-400/40 text-[10px] px-1.5 py-0.5 border border-purple-400/10 rounded">${esc(p.cat)}</span>
                         <span class="text-white/15 text-[10px] ml-auto">${p.updated}</span>
                     </div>
                 </a>
@@ -230,26 +241,34 @@
         // ---- Interactions ----
         window.setSort = function(sort) {
             currentSort = sort;
-            document.querySelectorAll('#sortButtons .tag').forEach(b => b.classList.remove('active'));
-            document.querySelector(`#sortButtons [data-sort="${sort}"]`).classList.add('active');
+            document.querySelectorAll('#sortButtons .tag').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+            const activeSort = document.querySelector(`#sortButtons [data-sort="${sort}"]`);
+            activeSort.classList.add('active'); activeSort.setAttribute('aria-pressed', 'true');
             renderGrid();
         };
 
         window.setCategory = function(cat) {
             currentCategory = cat;
-            document.querySelectorAll('#categoryFilters .tag').forEach(b => b.classList.remove('active'));
-            document.querySelector(`#categoryFilters [data-cat="${cat}"]`).classList.add('active');
+            document.querySelectorAll('#categoryFilters .tag').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+            const activeCat = document.querySelector(`#categoryFilters [data-cat="${cat}"]`);
+            activeCat.classList.add('active'); activeCat.setAttribute('aria-pressed', 'true');
             renderGrid();
         };
 
+        let _searchTimer = null;
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            renderGrid();
+            clearTimeout(_searchTimer);
+            _searchTimer = setTimeout(() => {
+                searchQuery = e.target.value;
+                renderGrid();
+            }, 150);
         });
 
         // ---- Init ----
         renderFeatured();
         renderGrid();
+        // After initial render, disable fade-in for subsequent filter/search changes
+        setTimeout(() => { initialLoad = false; }, 500);
     })();
     </script>
 </body>
